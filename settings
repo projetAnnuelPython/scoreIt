@@ -1,0 +1,7 @@
+{
+  "sql" : {
+    "login" : "root",
+    "password" : "",
+    "database_name":"scoreIt"
+  }
+}
