@@ -11,6 +11,9 @@ settings = json_parser.parsefile('settings')
 sqlConnect = SqlDbConnection(settings['sql']['login'], settings['sql']['password'],
                              settings['sql']['database_name'])
 sqlConnect.get_connection()
+sqlConnect.fixtures_create_db()
+sqlConnect.create_tables()
+sqlConnect.fixtures_insert_users(settings['users'])
 
 root = tk.Tk()
 root.geometry('500x300+300+40')

@@ -24,7 +24,7 @@ class App(tk.Frame):
     def show_frame(self):
         self.Frames['current'].destroy()
         user_view = user_profile(self)
-        self.Frames['current']
+        self.Frames['current'] = user_view
         user_view.pack(side="top")
         user_view.tkraise()
 
@@ -50,10 +50,14 @@ class Home(tk.Frame):
         password_entry.pack()
 
         #button_image = image.open(file="/Users/fofofofodev/Desktop/ESGI3A/OUTILS DU DEVELOPPEUR /ProjetAnnuel/scoreIt/view/go.gif")
-        validate_button = Button(self, height=100, text="VALIDER", command=lambda: controller.show_frame(),
+        validate_button = Button(self, height=100, text="VALIDER", command=lambda: self.on_login(),
                                  relief="ridge", bg="#000fff000")
         #validate_button.config(font=("Verdana", 20))
         validate_button.pack(fill=BOTH)
+
+    def on_login(self):
+        print("Login is {}".format(self.login.get()))
+        print("password is {}".format(self.password.get()))
 
 
 class user_profile(tk.Frame):

@@ -3,5 +3,21 @@
     "login" : "root",
     "password" : "",
     "database_name":"scoreIt"
-  }
+  },
+  "users":[
+    {
+      "user_name":"fode",
+      "email" : "fode@fode.fr",
+      "password" : "score_it_1234",
+      "score" : 40,
+      "total_questions" :10
+    },
+    {
+      "user_name":"leon",
+      "email" : "leon@leon.fr",
+      "password" : "score_it_5678",
+      "score" : 30,
+      "total_questions" :10
+    }
+  ]
 }
