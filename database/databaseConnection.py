@@ -1,14 +1,14 @@
 import pymysql
 import database.Tables as Tables
 
+
 class SqlDbConnection(object):
-    def __init__(self, default_user, default_password, database_name):
-        self.default_user = default_user
-        self.default_password = default_password
-        self.database_name = database_name
+    def __init__(self, settings):
+        self.default_user = settings['sql']['login']
+        self.default_password = settings['sql']['password']
+        self.database_name = settings['sql']['database_name']
 
     def get_connection(self):
-
         try:
             # create connexion
             connection = pymysql.Connect(user=self.default_user, passwd=self.default_password, autocommit=True)
