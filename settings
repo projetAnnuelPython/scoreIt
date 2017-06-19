@@ -6,18 +6,20 @@
   },
   "users":[
     {
-      "user_name":"fode",
+      "user_name":"Fodé",
       "email" : "fode@fode.fr",
       "password" : "score_it_1234",
       "score" : 40,
-      "total_questions" :10
+      "total_questions" :10,
+      "user_last_name" : "Guirassy"
     },
     {
-      "user_name":"leon",
+      "user_name":"Léon",
       "email" : "leon@leon.fr",
       "password" : "score_it_5678",
       "score" : 30,
-      "total_questions" :10
+      "total_questions" :10,
+      "user_last_name" : "Wong"
     }
   ]
 }
