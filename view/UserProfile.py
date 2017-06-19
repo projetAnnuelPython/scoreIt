@@ -12,6 +12,11 @@ class UserProfile(tk.Frame):
         tk.Frame.__init__(self, controller)
         self.controller = controller
 
+        Grid.rowconfigure(self, 10, weight=1)
+        Grid.columnconfigure(self, 50, weight=1)
+        go_play = tk.Button(text='JOUER')
+        go_play.grid(row=10, column=10, sticky='n', pady=140, padx=30)
+
         top_pane = PanedWindow()
         label_firstname = Label(top_pane, text=self.controller.current_user.name)
         top_pane.add(label_firstname)
@@ -27,7 +32,7 @@ class UserProfile(tk.Frame):
         mid_pane_right = PanedWindow()
         label_ranking = Label(mid_pane_right, text='Classement')
         mid_pane_right.add(label_ranking)
-        mid_pane_right.grid(row=2, column=30, padx=170)
+        mid_pane_right.grid(row=2, column=12, padx=50, pady=10)
 
 
         name = ['gagnés', 'perdus']
@@ -44,15 +49,13 @@ class UserProfile(tk.Frame):
         canvas.get_tk_widget().grid(row=0, column=0, sticky='nw', pady=75)
         canvas.draw()
 
-
         list_box = Listbox(self.controller, borderwidth=0)
         index = 1
         for user in self.controller.users:
             current_user = self.controller.users[user]
             list_box.insert(index, "{}.   {}  {}/{}".format(index, current_user.name, current_user.score, (current_user.total_questions*10)))
             index = index + 1
-        list_box.grid(row=0, column=0, sticky='nse', pady=100)
+        list_box.grid(row=0, column=0, sticky='ne', pady=100)
 
-        go_play = Button(self, text="JOUER", command=lambda: self.controller.go_play())
-        go_play.grid(row=0, column=0)
+
 
