@@ -1,9 +1,17 @@
+from model.User import User
 import tkinter as tk;
 from tkinter import *
 from database.databaseConnection import SqlDbConnection
 import pymysql
+import matplotlib
+matplotlib.use('TkAgg')
 
-from model.User import User
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.figure import Figure
+
+
+
+import matplotlib.pyplot as plt
 
 LARGE_FONT = ("Verdana", 22)
 
@@ -13,6 +21,7 @@ class App(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.current_user = None
+        self.users = {}
         self.db_user = None
         self.db_password = None
         self.db_name = None
@@ -47,7 +56,8 @@ class App(tk.Frame):
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM users')
         for row in cursor.fetchall():
-            print(row)
+            user = User(row[0], row[1], row[2], row[3], row[4], row[5])
+            self.users[user.name] = user
 
     def create_window(self):
         self.home = Home(self)
@@ -59,10 +69,7 @@ class App(tk.Frame):
         self.Frames['current'].destroy()
         user_view = user_profile(self)
         self.Frames['current'] = user_view
-        user_view.pack(side="top")
         user_view.tkraise()
-
-
 
 
 class Home(tk.Frame):
@@ -76,6 +83,7 @@ class Home(tk.Frame):
 
         self.login = StringVar()
         login_entry = tk.Entry(self, textvariable=self.login)
+        login_entry.insert(END, 'fode@fode.fr')
         login_entry.pack(pady=10, padx=10)
 
         password_label = tk.Label(self, text="Mot de passe", font=LARGE_FONT)
@@ -83,6 +91,7 @@ class Home(tk.Frame):
 
         self.password = StringVar()
         password_entry = tk.Entry(self, textvariable=self.password)
+        password_entry.insert(END, 'score_it_1234')
         password_entry.pack()
 
         validate_button = Button(self, height=100, text="VALIDER", command=lambda: self.on_login(),
@@ -90,17 +99,61 @@ class Home(tk.Frame):
         validate_button.pack(fill=BOTH)
 
     def on_login(self):
-        print("Login is {}".format(self.login.get()))
-        print("password is {}".format(self.password.get()))
         self.controller.find_user(self.login.get(), self.password.get())
-
+        self.controller.find_all_users()
+        self.controller.show_frame()
 
 
 class user_profile(tk.Frame):
     def __init__(self, controller):
         tk.Frame.__init__(self, controller)
         self.controller = controller
-        #back_button = tk.Button(self, text="RETOUR", width=10, command=controller.create_window())
-        #back_button.pack()
-        label = tk.Label(self, text="USER PROFILE!!!", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
+
+        top_pane = PanedWindow()
+        label_firstname = Label(top_pane, text=self.controller.current_user.name)
+        top_pane.add(label_firstname)
+        label_lastname = Label(top_pane, text="Nom")
+        top_pane.add(label_lastname)
+
+        top_pane.grid(row=0, column=0, rowspan=3, pady=20)
+
+        mid_pane = PanedWindow()
+        label_test = Label(mid_pane, text='Statistiques')
+        mid_pane.add(label_test)
+
+        #mid_pane.add(canvas)
+
+        mid_pane.grid(row=3, column=15, columnspan=10, rowspan=10)
+
+        mid_pane_right = PanedWindow()
+        label_ranking = Label(mid_pane_right, text='Classement')
+        mid_pane_right.add(label_ranking)
+        mid_pane_right.grid(row=3, column=100, padx=120)
+
+        name = ['-18', '18-25', '25-50', '50+']
+        data = [5000, 26000, 21400, 12000]
+
+        explode = (0, 0.15, 0, 0)
+        plt.pie(data, explode=explode, labels=name, autopct='%1.1f%%', startangle=90, shadow=True)
+        plt.axis('equal')
+        plt.show()
+
+
+def draw_pie(self, pane):
+        names = [20, 30]
+        data = [20, 30]
+        f = Figure(figsize=(5, 5), dpi=100)
+        a = f.add_subplot(111)
+        a.plot(names, data)
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.show()
+        #pane.add(canvas)
+
+        #explode = (0, 0)
+        #plt.pie(data, explode=explode, labels=names, autopct='%1.1f%%', startangle=90, shadow=True)
+        #plt.axis('equal')
+        #plt.show()
+
+        #pane.add(plt)
+
