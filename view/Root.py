@@ -8,3 +8,4 @@ class Root(tk.Tk):
         self.title('SCORE IT')
         self.resizable(width=False, height=False)
 
+

@@ -2,10 +2,8 @@ from tool.JsonParser import JsonParser
 from database.databaseConnection import SqlDbConnection
 from view.App import *
 from view.Root import *
-import tkinter as tk
-import tkinter
-#   self.root.bind('<FocusIn>', self.focus_in)
-# load json resources
+from model.Operation import Operation
+
 json_parser = JsonParser()
 settings = json_parser.parsefile('settings')
 
@@ -22,5 +20,9 @@ app = App(root)
 app.set_db_connection_credentials(settings)
 
 app.pack(side="top", fill="both", expand=True)
+
 root.mainloop()
 
+#while True:
+    #root.update_idletasks()
+    #root.update()

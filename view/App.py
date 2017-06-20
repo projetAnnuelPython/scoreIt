@@ -1,20 +1,18 @@
+from view.Playground import Playground
 from view.Home import Home
 from view.UserProfile import UserProfile
 from model.User import User
-import tkinter as tk;
-from tkinter import *
+import tkinter as tk
 from database.databaseConnection import SqlDbConnection
 import pymysql
 import matplotlib
 matplotlib.use('TkAgg')
 
 
-
 LARGE_FONT = ("Verdana", 22)
 
 
 class App(tk.Frame):
-
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.current_user = None
@@ -26,6 +24,27 @@ class App(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.Frames = {}
         self.create_window()
+
+    def get_user_by_id(self):
+        try:
+            connection = self.set_connection()
+            cursor = connection.cursor()
+            cursor.execute('SELECT * FROM users WHERE user_id="%s"' % self.current_user.user_id)
+            row = cursor.fetchone()
+            self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+        except pymysql.MySQLError as error:
+            print(error)
+
+    def update_total_questions(self):
+        try:
+            connection = self.set_connection()
+            cursor = connection.cursor()
+            cursor.execute('UPDATE users SET total_questions = "%s" WHERE user_id="%s"'%((self.current_user.total_questions + 1), self.current_user.user_id))
+            connection.commit()
+            print('{} total questions has been succesfully updated'.format(self.current_user.name))
+        except pymysql.MySQLError as error:
+            print('Failed to update total_questions. Error is {}'.format(error))
+
 
     def set_db_connection_credentials(self, settings):
         self.db_user = settings['sql']['login']
@@ -62,10 +81,17 @@ class App(tk.Frame):
         self.home.tkraise()
 
     def show_frame(self):
+
+        self.find_all_users()
+
         self.Frames['current'].destroy()
         user_view = UserProfile(self)
         self.Frames['current'] = user_view
         user_view.tkraise()
 
     def go_play(self):
-        print('Hello')
+
+        self.Frames['current'].destroy()
+        playground = Playground(self)
+        self.Frames['current'] = playground
+        playground.tkraise()
