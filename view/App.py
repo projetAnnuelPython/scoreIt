@@ -24,6 +24,32 @@ class App(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.Frames = {}
         self.create_window()
+        self.ordered_by_average = {}
+
+    def update_average(self):
+        try:
+            self.get_user_by_id()
+            connection = self.set_connection()
+            cursor = connection.cursor()
+            cursor.execute('UPDATE users SET user_average="%s" WHERE user_id="%s"' % (self.current_user.update_user_average(), self.current_user.user_id))
+            connection.commit()
+
+        except pymysql.MySQLError as err:
+            print('failed to update user_average. Error is {}'.format(err))
+
+    def update_score(self, boolean):
+        try:
+            connection = self.set_connection()
+            cursor = connection.cursor()
+            if boolean:
+                cursor.execute('UPDATE users SET score="%s" WHERE user_id="%s"' % ((self.current_user.score + 10), self.current_user.user_id))
+            else:
+                cursor.execute('UPDATE users SET score="%s" WHERE user_id="%s"' % (
+                              (self.current_user.score - 10), self.current_user.user_id))
+            connection.commit()
+
+        except pymysql.MySQLError as error:
+            print(error)
 
     def get_user_by_id(self):
         try:
@@ -31,7 +57,7 @@ class App(tk.Frame):
             cursor = connection.cursor()
             cursor.execute('SELECT * FROM users WHERE user_id="%s"' % self.current_user.user_id)
             row = cursor.fetchone()
-            self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+            self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
         except pymysql.MySQLError as error:
             print(error)
 
@@ -41,10 +67,8 @@ class App(tk.Frame):
             cursor = connection.cursor()
             cursor.execute('UPDATE users SET total_questions = "%s" WHERE user_id="%s"'%((self.current_user.total_questions + 1), self.current_user.user_id))
             connection.commit()
-            print('{} total questions has been succesfully updated'.format(self.current_user.name))
         except pymysql.MySQLError as error:
             print('Failed to update total_questions. Error is {}'.format(error))
-
 
     def set_db_connection_credentials(self, settings):
         self.db_user = settings['sql']['login']
@@ -64,15 +88,27 @@ class App(tk.Frame):
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM users WHERE email="%s" AND password="%s" ' % (email, password))
         row = cursor.fetchone()
-        self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+        self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
 
     def find_all_users(self):
-        connection = self.set_connection()
-        cursor = connection.cursor()
-        cursor.execute('SELECT * FROM users')
-        for row in cursor.fetchall():
-            user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
-            self.users[user.name] = user
+        if self.users is not None:
+            self.users.clear()
+
+        try:
+            self.get_user_by_id()
+            self.update_average()
+
+            connection = self.set_connection()
+            cursor = connection.cursor()
+            cursor.execute('SELECT * FROM users ORDER BY user_average DESC ')
+            for row in cursor.fetchall():
+                user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+                self.users[user.name] = user
+        except pymysql.MySQLError as err:
+            print('failed to find all users. Error is {} '.format(err))
+        print('new line')
+        print('{}'.format(self.users))
+
 
     def create_window(self):
         self.home = Home(self)
@@ -82,6 +118,8 @@ class App(tk.Frame):
 
     def show_frame(self):
 
+        self.get_user_by_id()
+        self.update_average()
         self.find_all_users()
 
         self.Frames['current'].destroy()
@@ -91,7 +129,17 @@ class App(tk.Frame):
 
     def go_play(self):
 
+        self.get_user_by_id()
+        self.update_average()
+        self.find_all_users()
+
         self.Frames['current'].destroy()
         playground = Playground(self)
         self.Frames['current'] = playground
         playground.tkraise()
+
+    def order_by_average(self):
+        for index in self.users:
+            print('{}'.format(self.users[index].update_user_average()))
+
+

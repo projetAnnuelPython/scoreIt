@@ -3,6 +3,6 @@ class Tables(object):
         self.TABLES = {
             'users': "CREATE TABLE `users`(user_id INT NOT NULL AUTO_INCREMENT,"
                      "PRIMARY KEY (user_id), user_name VARCHAR(255), email VARCHAR(255), password VARCHAR(255),"
-                     "score INT, total_questions INT, user_last_name VARCHAR (255))"
+                     "score INT, total_questions INT, user_last_name VARCHAR (255), user_average FLOAT(10,2))"
         }
 

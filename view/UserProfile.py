@@ -26,9 +26,9 @@ class UserProfile(tk.Frame):
         explode = (0, 0)
         fig = plt.figure(figsize=(2, 2))
         patches, texts, auto_texts = plt.pie(data, radius=0.4, explode=explode, labels=name, colors=colors,
-                                             autopct='%1.1f%%', startangle=90, shadow=True)
-        texts[0].set_fontsize(6)
-        texts[1].set_fontsize(6)
+                                             autopct='%1.1f%%', startangle=50, shadow=True)
+        texts[0].set_fontsize(7)
+        texts[1].set_fontsize(7)
         plt.axis('equal')
 
         canvas = FigureCanvasTkAgg(fig, master=self)
@@ -38,7 +38,12 @@ class UserProfile(tk.Frame):
         list_box = Listbox(self, borderwidth=0)
         index = 1
         for user in self.controller.users:
+
+
             current_user = self.controller.users[user]
+
+            print('list box user {} average {}'.format(current_user.name, current_user.user_average))
+
             list_box.insert(index, "{}.   {}  {}/{}".format(index, current_user.name, current_user.score,
                                                             (current_user.total_questions * 10)))
             index = index + 1

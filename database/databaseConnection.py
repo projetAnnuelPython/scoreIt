@@ -55,8 +55,8 @@ class SqlDbConnection(object):
         cursor = connection.cursor()
         try:
             for user in users:
-                cursor.execute('INSERT INTO users(user_name,email,password,score,total_questions,user_last_name)'
-                               'VALUES("%s","%s","%s","%s","%s","%s")' % (user['user_name'], user['email'],  user['password'], user['score'], user['total_questions'], user['user_last_name']))
+                cursor.execute('INSERT INTO users(user_name, email, password, score, total_questions, user_last_name, user_average)'
+                               'VALUES("%s","%s","%s","%s","%s","%s","%s")' % (user['user_name'], user['email'],  user['password'], user['score'], user['total_questions'], user['user_last_name'], user['user_average']))
                 connection.commit()
                 print("user {} successfully saved".format(user['user_name']))
         except pymysql.MySQLError as error:

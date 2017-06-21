@@ -11,7 +11,8 @@
       "password" : "score_it_1234",
       "score" : 40,
       "total_questions" :10,
-      "user_last_name" : "Guirassy"
+      "user_last_name" : "Guirassy",
+      "user_average" : 0.4
     },
     {
       "user_name":"Léon",
@@ -19,7 +20,8 @@
       "password" : "score_it_5678",
       "score" : 30,
       "total_questions" :10,
-      "user_last_name" : "Wong"
+      "user_last_name" : "Wong",
+      "user_average" : 0.3
     }
   ]
 }

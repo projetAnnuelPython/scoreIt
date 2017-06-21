@@ -14,7 +14,6 @@ class Playground(tk.Frame):
         self.wrong_response_text = "Faux! La vraie réponse est "
         self.right_response_text = "Bravo! Bonne réponse"
 
-
         self.is_operation_launched = False
 
         self.controller = controller
@@ -37,7 +36,7 @@ class Playground(tk.Frame):
 
         self.submit_response = Button(self, text='SOUMETTRE', command=lambda: self.on_response_submitted())
 
-        self.go_back_button = Button(self, text='MES STATISTIQUES', command=lambda: self.controller.show_frame())
+        self.go_back_button = Button(self, text='MES STATISTIQUES', command=lambda: self.go_to_user_profile())
         self.go_back_button.pack(side=BOTTOM, pady=15)
 
         self.start_play_button = Button(self, text='NOUVELLE OPERATION',
@@ -45,12 +44,18 @@ class Playground(tk.Frame):
         self.start_play_button.pack(side=BOTTOM, pady=5)
 
     def on_response_submitted(self):
+
         given_response = self.given_response.get()
+
         if int(given_response) == self.operation.result:
             self.sentence_text.set(self.right_response_text)
+            self.controller.update_score(True)
         else:
             self.sentence_text.set(self.wrong_response_text + ' ' + str(self.operation.result))
+            self.controller.update_score(False)
+
         self.response_entry.delete(0, 'end')
+        self.controller.update_average()
 
     def launch_operation(self):
 
@@ -58,13 +63,12 @@ class Playground(tk.Frame):
         self.controller.update_total_questions()
 
         self.is_operation_launched = True
+
         self.operation = Operation()
         self.operation_text.set(self.operation.validate_operation())
         self.label_equal.pack(anchor=W, padx=230, pady=5)
         self.response_entry.pack(anchor=W, padx=200, pady=5)
         self.submit_response.pack(anchor=W, padx=200, pady=5)
-
-
 
     def update_countdown(self):
         start = datetime.datetime.now()
@@ -93,3 +97,7 @@ class Playground(tk.Frame):
         #     while counter >= 0:
         #         self.update_countdown_label(counter)
         #         counter = counter - 200000
+
+    def go_to_user_profile(self):
+        self.controller.find_all_users()
+        self.controller.show_frame()
