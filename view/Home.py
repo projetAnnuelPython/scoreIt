@@ -28,11 +28,25 @@ class Home(tk.Frame):
         password_entry.insert(END, 'score_it_1234')
         password_entry.pack()
 
+        self.error_text = StringVar()
+        self.error_text.set('')
+        self.error_label = Label(self, textvariable=self.error_text, font=LARGE_FONT, fg='red')
+        self.error_label.pack()
+
         validate_button = Button(self, height=100, text="VALIDER", command=lambda: self.on_login(),
                                  relief="ridge", bg="#000fff000")
         validate_button.pack(fill=BOTH)
 
+
     def on_login(self):
-        self.controller.find_user(self.login.get(), self.password.get())
-        self.controller.find_all_users()
-        self.controller.show_frame()
+        if self.login.get() and self.password.get():
+            self.controller.find_user(self.login.get(), self.password.get())
+            self.controller.find_all_users()
+            self.controller.show_user_profile_screen()
+        else:
+            self.error_text.set('Identifiants incorrects')
+
+
+
+
+

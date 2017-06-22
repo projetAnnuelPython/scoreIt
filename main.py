@@ -2,7 +2,6 @@ from tool.JsonParser import JsonParser
 from database.databaseConnection import SqlDbConnection
 from view.App import *
 from view.Root import *
-from model.Operation import Operation
 
 json_parser = JsonParser()
 settings = json_parser.parsefile('settings')
@@ -23,6 +22,3 @@ app.pack(side="top", fill="both", expand=True)
 
 root.mainloop()
 
-#while True:
-    #root.update_idletasks()
-    #root.update()

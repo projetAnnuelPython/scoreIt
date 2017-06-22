@@ -3,7 +3,6 @@ from view.Home import Home
 from view.UserProfile import UserProfile
 from model.User import User
 import tkinter as tk
-from database.databaseConnection import SqlDbConnection
 import pymysql
 import matplotlib
 matplotlib.use('TkAgg')
@@ -23,8 +22,8 @@ class App(tk.Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.Frames = {}
-        self.create_window()
-        self.ordered_by_average = {}
+        self.show_home_screen()
+        self.home = None
 
     def update_average(self):
         try:
@@ -75,29 +74,31 @@ class App(tk.Frame):
         self.db_password = settings['sql']['password']
         self.db_name = settings['sql']['database_name']
 
+    # create connexion
     def set_connection(self):
-        # create connexion
-        connection = pymysql.Connect(user=self.db_user, passwd=self.db_password, database=self.db_name, autocommit=True)
-        connection.commit()
-        return connection
-        connection = SqlDbConnection()
-        return connection
+        try:
+            connection = pymysql.Connect(user=self.db_user, passwd=self.db_password, database=self.db_name, autocommit=True)
+            connection.commit()
+            return connection
+        except pymysql.MySQLError as error:
+            print('MySql connection failed. Error is {}'.format(error))
 
     def find_user(self, email, password):
-        connection = self.set_connection()
-        cursor = connection.cursor()
-        cursor.execute('SELECT * FROM users WHERE email="%s" AND password="%s" ' % (email, password))
-        row = cursor.fetchone()
-        self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+        try:
+            connection = self.set_connection()
+            cursor = connection.cursor()
+            cursor.execute('SELECT * FROM users WHERE email="%s" AND password="%s" ' % (email, password))
+            row = cursor.fetchone()
+            self.current_user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+        except pymysql.MySQLError as error:
+            print('Failed to retrieve user from database. Error is {}'.format(error))
 
     def find_all_users(self):
         if self.users is not None:
             self.users.clear()
-
         try:
             self.get_user_by_id()
             self.update_average()
-
             connection = self.set_connection()
             cursor = connection.cursor()
             cursor.execute('SELECT * FROM users ORDER BY user_average DESC ')
@@ -106,17 +107,14 @@ class App(tk.Frame):
                 self.users[user.name] = user
         except pymysql.MySQLError as err:
             print('failed to find all users. Error is {} '.format(err))
-        print('new line')
-        print('{}'.format(self.users))
 
-
-    def create_window(self):
+    def show_home_screen(self):
         self.home = Home(self)
         self.Frames['current'] = self.home
         self.home.pack(side="top")
         self.home.tkraise()
 
-    def show_frame(self):
+    def show_user_profile_screen(self):
 
         self.get_user_by_id()
         self.update_average()
@@ -127,7 +125,7 @@ class App(tk.Frame):
         self.Frames['current'] = user_view
         user_view.tkraise()
 
-    def go_play(self):
+    def show_playground_screen(self):
 
         self.get_user_by_id()
         self.update_average()
@@ -137,9 +135,4 @@ class App(tk.Frame):
         playground = Playground(self)
         self.Frames['current'] = playground
         playground.tkraise()
-
-    def order_by_average(self):
-        for index in self.users:
-            print('{}'.format(self.users[index].update_user_average()))
-
 

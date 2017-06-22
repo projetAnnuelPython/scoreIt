@@ -1,10 +1,9 @@
-from model.User import User
 import tkinter as tk;
 from tkinter import *
 import matplotlib
-matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+matplotlib.use('TkAgg')
 
 
 class UserProfile(tk.Frame):
@@ -38,20 +37,14 @@ class UserProfile(tk.Frame):
         list_box = Listbox(self, borderwidth=0)
         index = 1
         for user in self.controller.users:
-
-
             current_user = self.controller.users[user]
-
             print('list box user {} average {}'.format(current_user.name, current_user.user_average))
-
             list_box.insert(index, "{}.   {}  {}/{}".format(index, current_user.name, current_user.score,
                                                             (current_user.total_questions * 10)))
             index = index + 1
-
         list_box.pack_propagate(True)
         list_box.pack(side=RIGHT, expand=1, anchor=E, padx=20, pady=80)
-
-        go_play = tk.Button(self, text='JOUER', command=lambda: self.controller.go_play())
+        go_play = tk.Button(self, text='JOUER', command=lambda: self.controller.show_playground_screen())
         go_play.pack(side=BOTTOM)
 
 

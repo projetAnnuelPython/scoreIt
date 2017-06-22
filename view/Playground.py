@@ -1,6 +1,5 @@
 import tkinter as tk;
 from tkinter import *
-import time
 import datetime
 from model.Operation import Operation
 
@@ -100,4 +99,4 @@ class Playground(tk.Frame):
 
     def go_to_user_profile(self):
         self.controller.find_all_users()
-        self.controller.show_frame()
+        self.controller.show_user_profile_screen()
