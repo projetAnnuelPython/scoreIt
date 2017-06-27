@@ -575,7 +575,14 @@
       <option name="project" value="LOCAL" />
       <updated>1498143401763</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="started the doc">
+      <created>1498157880898</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1498157880898</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -620,7 +627,8 @@
     <MESSAGE value="finished operation screen" />
     <MESSAGE value="app functional" />
     <MESSAGE value="cleaned up and added readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned up and added readme" />
+    <MESSAGE value="started the doc" />
+    <option name="LAST_COMMIT_MESSAGE" value="started the doc" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
